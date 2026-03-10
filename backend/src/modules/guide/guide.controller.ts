@@ -29,14 +29,14 @@ export class GuideController {
 
   @UseGuards(JwtAuthGuard)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() body: any) {
-    return this.guideService.update(id, body)
+  async update(@Param('id') id: string, @Request() req, @Body() body: any) {
+    return this.guideService.update(id, req.user.userId, body)
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
-  async delete(@Param('id') id: string) {
-    await this.guideService.delete(id)
+  async delete(@Param('id') id: string, @Request() req) {
+    await this.guideService.delete(id, req.user.userId)
     return { message: '删除成功' }
   }
 }
