@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException, ForbiddenException, BadRequestException, Inject } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
-import { Repository, IsNull, Not } from 'typeorm'
+import { Repository, IsNull, Not, FindOptionsWhere } from 'typeorm'
 import { CACHE_MANAGER } from '@nestjs/cache-manager'
 import { Cache } from 'cache-manager'
 import { Guide } from './guide.entity'
@@ -126,7 +126,7 @@ export class GuideService {
     }
 
     const [data, total] = await this.guideRepository.findAndCount({
-      where: { userId, deletedAt: IsNull() },
+      where: { userId, deletedAt: IsNull() } as FindOptionsWhere<Guide>,
       order: { [sortBy]: order },
       skip: (page - 1) * limit,
       take: limit,
@@ -148,7 +148,7 @@ export class GuideService {
    */
   async findById(id: string, incrementView: boolean = false): Promise<Guide> {
     const guide = await this.guideRepository.findOne({ 
-      where: { id, deletedAt: IsNull() } 
+      where: { id, deletedAt: IsNull() } as FindOptionsWhere<Guide>
     })
     
     if (!guide) {
@@ -189,7 +189,7 @@ export class GuideService {
     }
 
     const [data, total] = await this.guideRepository.findAndCount({
-      where: { isPublic: true, deletedAt: IsNull() },
+      where: { isPublic: true, deletedAt: IsNull() } as FindOptionsWhere<Guide>,
       order: { [sortBy]: order },
       skip: (page - 1) * limit,
       take: limit,
@@ -272,7 +272,7 @@ export class GuideService {
    */
   async restore(id: string, userId: string): Promise<Guide> {
     const guide = await this.guideRepository.findOne({
-      where: { id, deletedAt: Not(IsNull()) }
+      where: { id, deletedAt: Not(IsNull()) } as FindOptionsWhere<Guide>
     })
 
     if (!guide) {
@@ -383,7 +383,7 @@ export class GuideService {
     totalLikes: number
   }> {
     const guides = await this.guideRepository.find({
-      where: { userId, deletedAt: IsNull() }
+      where: { userId, deletedAt: IsNull() } as FindOptionsWhere<Guide>
     })
 
     return {

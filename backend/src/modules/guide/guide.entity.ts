@@ -43,4 +43,8 @@ export class Guide {
 
   @UpdateDateColumn()
   updatedAt: Date
+
+  @Column({ type: 'timestamp', nullable: true })
+  deletedAt: Date | null
 }
+
